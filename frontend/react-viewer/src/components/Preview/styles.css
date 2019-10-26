@@ -1,0 +1,93 @@
+.preview-wrap {
+  /* transition: max-height 1s ease-in-out; */
+  overflow: hidden;
+  /* max-height: 0; */
+  width: 95%;
+  max-width: 95%;
+  margin: 20px auto;
+}
+.preview-wrap.show {
+  max-height: 300px;
+}
+.preview-loading-wrap {
+  border: 1px dashed gray;
+  padding: 5px;
+  display: flex;
+  animation: loading-pulse 4s ease-in-out infinite, fade-in 0.5s ease-in-out;
+}
+.preview-loading-wrap .image-wrap {
+  width: 100px;
+  height: 100px;
+  background-color: #ddd;
+  margin: 10px;
+}
+.preview-loading-wrap .text-wrap {
+  margin: 10px;
+  flex: 1;
+}
+.preview-loading-wrap .text-wrap span {
+  display: block;
+  background-color: #ddd;
+  width: 90%;
+  height: 0.9em;
+  margin: 0.4em 0 0.4em 0.2em;
+  background: linear-gradient(90deg, #dedede, #eaeaea, #dedede, #eaeaea);
+  background-size: 300% 100%;
+  animation: loading-background-move 1.5s ease-in-out infinite;
+}
+.preview-loading-wrap .text-wrap .title-fake {
+  width: 95%;
+  margin: 0.2em 0 0.5em 0.2em;
+  height: 1.4em;
+}
+.preview-loading-wrap .text-wrap .description-fake {
+  margin-top: 15px;
+}
+.preview-loading-wrap .text-wrap .description-fake span:nth-child(1) {
+  width: 88%;
+  animation-delay: 0.2s;
+}
+.preview-loading-wrap .text-wrap .description-fake span:nth-child(2) {
+  animation-delay: 0.5s;
+}
+.preview-loading-wrap .text-wrap .description-fake span:nth-child(3) {
+  width: 40%;
+}
+
+.preview-result-wrap {
+  display: flex;
+  animation: fade-in 0.5s ease-in-out;
+  border: 1px dashed #ddd;
+  padding: 10px;
+}
+.preview-result-wrap .thumb-wrap {
+  background-color: #aaa;
+  width: 30%;
+  max-width: 100px;
+  height: 100px;
+}
+.preview-result-wrap .thumb-wrap img {
+  border: 1px dashed #ddd;
+  width: 100%;
+  min-width: 100px;
+  height: 100%;
+  object-fit: cover;
+}
+.preview-result-wrap .text-wrap {
+  flex-grow: 1;
+  text-align: left;
+  padding: 5px;
+  margin: 0 10px;
+}
+.preview-result-wrap .text-wrap h3 {
+  font-size: 1.2em;
+}
+.preview-result-wrap .text-wrap .sitename {
+  font-size: 0.8em;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+.preview-result-wrap .text-wrap .description {
+  margin-top: 10px;
+  font-size: 0.9em;
+}

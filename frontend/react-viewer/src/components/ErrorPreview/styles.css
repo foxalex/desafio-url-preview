@@ -1,0 +1,40 @@
+.error-preview-wrap {
+  margin: 10px 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  min-height: 100px;
+  border: 1px dashed #ddd;
+  background-color: #eee;
+  font-weight: 800;
+  line-height: 1.5em;
+  color: #888;
+  animation: fade-in 0.3s ease-in-out;
+}
+.error-preview-wrap span {
+  display: block;
+  font-size: 2em;
+  margin: 10px;
+  animation: monkey-animation 4s ease-in-out infinite;
+}
+
+@keyframes monkey-animation {
+  0% {
+    transform: scale(1) translateY(0px) rotate(0);
+  }
+  30% {
+    transform: scale(1.2) rotate(10deg);
+  }
+
+  70% {
+    transform: scale(1.2) rotate(-10deg);
+  }
+  100% {
+    transform: scale(1) translateY(0px) rotate(0);
+  }
+}

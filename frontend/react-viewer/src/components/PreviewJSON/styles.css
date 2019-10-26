@@ -1,0 +1,11 @@
+.preview-json-wrap {
+  margin-top: 40px;
+  margin: 40px auto;
+  width: 95%;
+  max-width: 600px;
+  animation: fade-in 0.5s ease-in-out;
+}
+.preview-json-wrap pre {
+  padding: 20px !important;
+  white-space: pre-wrap;
+}

@@ -1,0 +1,28 @@
+.input-url-wrap {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 100%;
+}
+.input-url-wrap .feedback {
+  color: #888;
+  font-size: 0.9em;
+  margin: 10px;
+  animation: loading-pulse 10s ease-in-out infinite;
+}
+
+.input-url-wrap input {
+  width: 80%;
+  margin: 20px auto 0 auto;
+  padding: 10px;
+  outline: none;
+  border: none;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+.input-url-wrap input::placeholder {
+  color: #ccc;
+  font-weight: 200;
+}

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Tester With Preact</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
+    <style type="text/css">
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: 'Roboto', sans-serif;
+      }
+      .app {
+        max-width: 600px;
+        margin: 40px auto;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+      }
+      .main-input-url {
+        width: 80%;
+        margin: 20px auto 0 auto;
+        padding: 10px;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+        font-size: 1.2em;
+      }
+      h4 {
+        margin: 20px 0;
+      }
+      .response-wrap {
+        width: 100%;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        animation: fade-in 0.3s ease-in-out;
+      }
+      .main-input-url::placeholder {
+        color: #ccc;
+        font-weight: 200;
+      }
+      .preview-feedback {
+        color: #888;
+        font-size: 0.9em;
+        margin: 10px;
+        animation: loading-pulse 10s ease-in-out infinite;
+      }
+      .preview-wrap {
+        transition: max-height 1s ease-in-out;
+        overflow: hidden;
+        max-height: 0;
+        width: 100%;
+      }
+      .preview-wrap.show {
+        max-height: 300px;
+      }
+      .preview-loading {
+        border: 1px dashed gray;
+        padding: 5px;
+        display: flex;
+        animation: loading-pulse 4s ease-in-out infinite,
+          fade-in 0.5s ease-in-out;
+      }
+      .preview-loading .image-wrap {
+        width: 100px;
+        height: 100px;
+        background-color: #ddd;
+        margin: 10px;
+      }
+      .preview-loading .text-wrap {
+        /*border:1px dashed #ddd;*/
+        margin: 10px;
+        flex: 1;
+      }
+      .preview-loading .text-wrap span {
+        display: block;
+        background-color: #ddd;
+        width: 90%;
+        height: 0.9em;
+        margin: 0.4em 0 0.4em 0.2em;
+        background: linear-gradient(90deg, #dedede, #eaeaea, #dedede, #eaeaea);
+        background-size: 300% 100%;
+        animation: loading-background-move 1.5s ease-in-out infinite;
+      }
+      .preview-loading .text-wrap .title-fake {
+        width: 95%;
+        margin: 0.2em 0 0.5em 0.2em;
+        height: 1.4em;
+      }
+      .preview-loading .text-wrap .description-fake {
+        margin-top: 15px;
+      }
+      .preview-loading .text-wrap .description-fake span:nth-child(1) {
+        width: 88%;
+        animation-delay: 0.2s;
+      }
+      .preview-loading .text-wrap .description-fake span:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .preview-loading .text-wrap .description-fake span:nth-child(3) {
+        width: 40%;
+      }
+      .result-preview {
+        margin: 10px 0;
+        padding: 5px;
+        border: 1px dashed #ddd;
+        animation: fade-in 0.5s ease-in-out;
+      }
+      .result-preview {
+        display: flex;
+      }
+      .result-preview .thumb-wrap {
+        background-color: #aaa;
+        width: 30%;
+        max-width: 100px;
+        height: 100px;
+      }
+      .result-preview .thumb-wrap img {
+        border: 1px dashed #ddd;
+        width: 100%;
+        min-width: 100px;
+        height: 100%;
+        object-fit: cover;
+      }
+      .result-preview .text-wrap {
+        flex-grow: 1;
+        text-align: left;
+        padding: 5px;
+        margin: 0 10px;
+      }
+      .result-preview .text-wrap h3 {
+        font-size: 1.2em;
+      }
+      .result-preview .text-wrap .sitename {
+        font-size: 0.8em;
+        color: #aaa;
+        margin-bottom: 5px;
+      }
+      .result-preview .text-wrap .description {
+        margin-top: 10px;
+        font-size: 0.9em;
+      }
+      .preview-error {
+        margin: 10px 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 20px;
+        min-height: 100px;
+        border: 1px dashed #ddd;
+        background-color: #eee;
+        font-weight: 800;
+        line-height: 1.5em;
+        color: #888;
+        animation: fade-in 0.3s ease-in-out;
+      }
+      .preview-error span {
+        display: block;
+        font-size: 2em;
+        margin-top: 10px;
+      }
+
+      .json-view {
+        font-size: 0.9em;
+        color: #888;
+        padding: 20px;
+        border: 1px dashed #ddd;
+        background-color: #efefef;
+        margin: 20px 10px;
+        max-width: 400px;
+        white-space: pre-wrap;
+        overflow: hidden;
+        line-height: 1.5em;
+      }
+      .json-view.error {
+        border-color: red;
+      }
+
+      /** Animations */
+      @keyframes loading-pulse {
+        0% {
+          opacity: 1;
+        }
+        30% {
+          opacity: 0.7;
+        }
+        50% {
+          opacity: 1;
+        }
+        70% {
+          opacity: 0.4;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes loading-background-move {
+        0% {
+          background-position: 0% 50%;
+        }
+        100% {
+          background-position: 100% 50%;
+        }
+      }
+
+      @keyframes fade-in {
+        0% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="preact"></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/preact/8.5.2/preact.min.js"
+      integrity="sha256-uE3E2W7iyrYJy+/48n4qGW6IgqbRFBjALmSYLHzJtSs="
+      crossorigin="anonymous"
+    ></script>
+    <script type="text/javascript">
+      const { Component, h, render } = window.preact;
+
+      const InputUrl = ({ handleChange }) =>
+        h('input', {
+          className: 'main-input-url',
+          placeholder: 'http://globo.com',
+          onKeyUp: handleChange,
+          onClick: e => {
+            e.currentTarget.select();
+          }
+        });
+
+      const PreviewLoading = ({ visible }) =>
+        visible &&
+        h(
+          'div',
+          { className: 'preview-loading' },
+          h('div', { className: 'image-wrap' }),
+          h(
+            'div',
+            { className: 'text-wrap' },
+            h('span', { className: 'title-fake' }),
+            h(
+              'div',
+              { className: 'description-fake' },
+              Array.from({ length: 3 }).map((r, i) => h('span'))
+            )
+          )
+        );
+
+      const PreviewResult = ({ preview = {}, visible }) => {
+        if (visible && preview.error) {
+          return h(
+            'div',
+            { className: 'preview-error' },
+            h('span', null, '🙈'),
+            h('br'),
+            'Ops...',
+            h('br'),
+            'Error loading Preview.'
+          );
+        }
+        return (
+          visible &&
+          h(
+            'div',
+            { className: 'result-preview' },
+            h(
+              'div',
+              { className: 'thumb-wrap' },
+              h('img', { src: preview.thumbnail })
+            ),
+            h(
+              'div',
+              { className: 'text-wrap' },
+              h('h3', null, preview.title),
+              h('p', { className: 'sitename' }, preview.domain),
+              h('p', { className: 'description' }, preview.description)
+            )
+          )
+        );
+      };
+
+      class App extends Component {
+        state = {
+          inited: false,
+          typing: false,
+          url: '',
+          awaitTime: 2000,
+          currentTime: 0,
+          typingInterval: null,
+          preview: {}
+        };
+
+        componentDidMount() {
+          let interval = setInterval(this.checkingTyping, 500);
+          this.setState(s => ({ typingInterva: interval }));
+        }
+
+        componentWillUnmount() {
+          clearInterval(this.state.typingInterval);
+        }
+
+        checkingTyping = () => {
+          let { typing, awaitTime, currentTime } = this.state;
+          if (typing) {
+            currentTime -= 500;
+            if (currentTime <= 0) {
+              this.loadingPreview();
+              this.setState(s => ({
+                typing: false,
+                currentTime: awaitTime
+              }));
+            } else {
+              this.setState(s => ({
+                currentTime
+              }));
+            }
+          }
+        };
+
+        loadingPreview = () => {
+          this.setState(s => ({ loading: true }));
+
+          fetch('http://localhost:3000', {
+            //fetch('../api/php/index.php', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              url: this.state.url
+            })
+          })
+            .then(req => {
+              return req.json();
+            })
+            .then(res => {
+              this.setState(s => ({ preview: res, loading: false }));
+            })
+            .catch(err => {
+              console.error('Error Loading Preview', err);
+              this.setState(s => ({ loading: false }));
+            });
+        };
+
+        handleChange = e => {
+          this.setState({
+            inited: true,
+            typing: true,
+            currentTime: this.state.awaitTime,
+            url: e.currentTarget.value
+          });
+        };
+
+        debugClick = e => {
+          console.log('Clicked');
+        };
+
+        render(props, state) {
+          return h(
+            'div',
+            { className: 'app' },
+            h('h1', null, 'Url Preview'),
+            h(InputUrl, { handleChange: this.handleChange }),
+            h(
+              'p',
+              { className: 'preview-feedback' },
+              state.typing
+                ? '👨‍💻 is typing...'
+                : state.loading
+                ? '⏳ loading preview...'
+                : ' '
+            ),
+            state.inited &&
+              h(
+                'div',
+                { className: 'response-wrap' },
+                h('h4', null, 'Preview'),
+                h(
+                  'div',
+                  { className: 'preview-wrap' + (state.inited ? ' show' : '') },
+                  h(PreviewLoading, { visible: state.loading || state.typing }),
+                  h(PreviewResult, {
+                    visible: state.inited && !state.loading && !state.typing,
+                    preview: state.preview
+                  })
+                ),
+                //h('button', { onClick: this.debugClick }, 'Debugging'),
+                h('h4', null, 'JSON API Response'),
+                h(
+                  'pre',
+                  {
+                    className:
+                      'json-view' + (state.preview.error ? ' error' : '')
+                  },
+                  JSON.stringify(state.preview, null, 2)
+                )
+              )
+          );
+        }
+      }
+
+      render(h(App), document.body);
+    </script>
+  </body>
+</html>
